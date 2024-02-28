@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="Dashboard.js"></script>
+  <title>River Monitoring Dashboard</title>
+</head>
+<body>
+
+  <h1 id="title">Dashboard
+    <p>Smart Monitoring River</p>
+  </h1>
+
+  <article id="graph">
+    <h2>River Level graph</h2>
+    <canvas id="graph" width="400" height="200"></canvas>
+  </article>
+
+  <div id="status">Status: <span id="statusValue">NORMAL</span></div>
+  
+  <!-- modifica opzionale usando il from -->
+  <section id="valve-control">
+    <label for="valveLevel">Valve Opening Level:</label>
+    <input type="range" id="valveLevel" min="0" max="100" step="1" value="50">
+    <button>Set Valve Level</button>
+  </section>
+
+  <section>
+    <h2>Current Water Level</h2>
+    <div>
+      <span>55%</span>
+      <span>Current Water</span>
+    </div>
+  </section>
+
+</body>
+</html>
