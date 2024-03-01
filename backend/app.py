@@ -1,4 +1,5 @@
 import random
+import json
 from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
@@ -16,7 +17,6 @@ def connect_mqtt() -> mqtt_client:
             print("Failed to connect, return code %d\n", rc)
 
     client = mqtt_client.Client(client_id)
-    # client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
@@ -25,6 +25,15 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        try:
+            # Converti il payload in un dizionario Python
+            payload_dict = json.loads(msg.payload.decode())
+            # Converti il dizionario in una stringa JSON
+            json_payload = json.dumps(payload_dict)
+            # Invia il JSON al codice JavaScript tramite standard output
+            print(json_payload)
+        except json.decoder.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
 
     client.subscribe(topic)
     client.on_message = on_message
