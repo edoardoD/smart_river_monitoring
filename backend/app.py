@@ -1,7 +1,15 @@
+from flask import Flask, jsonify
+from flask_cors import CORS  # Per risolvere problemi di CORS (Cross-Origin Resource Sharing)
 import random
 import json
 from paho.mqtt import client as mqtt_client
 
+app = Flask(__name__)
+CORS(app)  # Abilita CORS per tutte le route
+
+messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
+
+# Configurazione del broker MQTT
 broker = 'broker.emqx.io'
 port = 1883
 topic = "eps32/topic"
@@ -28,10 +36,8 @@ def subscribe(client: mqtt_client):
         try:
             # Converti il payload in un dizionario Python
             payload_dict = json.loads(msg.payload.decode())
-            # Converti il dizionario in una stringa JSON
-            json_payload = json.dumps(payload_dict)
-            # Invia il JSON al codice JavaScript tramite standard output
-            print(json_payload)
+            # Aggiungi il messaggio alla lista, la conversione json viene fatta dopo, prima dell'invio
+            messages.append(payload_dict)
         except json.decoder.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
 
@@ -44,5 +50,10 @@ def run():
     subscribe(client)
     client.loop_forever()
 
+# Endpoint per ottenere i messaggi
+@app.route('/api/messages', methods=['GET'])
+def get_messages():
+    return jsonify(messages)
 
-run()
+if __name__ == '__main__':
+    run()
