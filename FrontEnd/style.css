@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+}
+
+:root {
+    --water: #60ADAD;
+    --text: #fff;
+    --contrast: #525252;
+    --elem: #D9D9D9;
+}
+
+body {
+    color: var(--text);
+    background-color: #1E1E1E;
+}
+
+#title {
+    padding: 2rem;
+    background-color: var(--water);
+    font-size: 38px;
+    position: relative;
+}
+
+#title > p {
+    font-size: 18px;
+}
+
+/* Styling section */
+
+.content {
+    position: absolute;
+    margin-left: 4%;
+    top: 8rem;
+    width: 92%;
+    height: 78%;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) 1fr;
+    grid-template-rows: 0.6fr 1.5fr 1fr;
+    gap: 2rem;
+    color: var(--contrast);
+}
+
+.content * {
+    background-color: var(--elem);
+    border-radius: 15px;
+    h2, label, #statusValue{
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 400;
+    }
+    font-size: 1rem;
+}
+
+#graph-article {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    h2 {
+        padding: 1rem 0;
+    }
+}
+
+#graph{
+    width: 100%;
+    height: 100%;
+}
+
+#status {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#valve-control {
+    grid-column: 1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    button {
+        background-color: var(--water);
+        border: none;
+        color: var(--text);
+        width: 40%;
+        padding: 5px;
+    }
+
+    input {
+        width: 92%;
+    }
+}
+
+#water-level {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    h2 {
+        padding: 1rem 0;
+    }
+
+    .water-container {
+        position: relative;
+        text-align: center;
+        background-color: var(--contrast);
+        height: 80%;
+        width: 40%;
+        margin-left: 30%;
+
+        #value{
+            background-color: var(--contrast);
+            color: var(--text);
+        }
+
+        #water{
+            background-color: var(--water);
+            color: var(--water);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 55%; /* edit with javascript based on the value taken from the server */
+            border-radius: 10px;
+        }
+    }
+}
