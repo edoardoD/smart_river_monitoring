@@ -9,6 +9,28 @@ CORS(app)  # Abilita CORS per tutte le route
 
 messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
 
+# fake dati per testare js
+messages.append({
+    'water_level': 10,
+    'valve_opening_level': 75 
+})
+messages.append({
+    'water_level': 15,
+    'valve_opening_level': 70
+})
+messages.append({
+    'water_level': 20,
+    'valve_opening_level': 65
+})
+messages.append({
+    'water_level': 20,
+    'valve_opening_level': 65
+})
+messages.append({
+    'water_level': 15,
+    'valve_opening_level': 70
+})
+
 # Configurazione del broker MQTT
 broker = 'broker.emqx.io'
 port = 1883
@@ -46,9 +68,10 @@ def subscribe(client: mqtt_client):
 
 
 def run():
-    client = connect_mqtt()
-    subscribe(client)
-    client.loop_forever()
+    pass
+    #client = connect_mqtt()
+    #subscribe(client)
+    #client.loop_forever()
 
 # Endpoint per ottenere i messaggi
 @app.route('/api/messages', methods=['GET'])
@@ -56,4 +79,4 @@ def get_messages():
     return jsonify(messages)
 
 if __name__ == '__main__':
-    run()
+    app.run(debug=True)

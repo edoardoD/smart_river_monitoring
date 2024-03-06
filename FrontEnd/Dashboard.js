@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Funzione per ottenere i messaggi dal server Flask
     function getMessages() {
-        fetch('http://localhost:5000/api/messages')
+        fetch('http://127.0.0.1:5000/api/messages')
             .then(response => response.json())
             .then(data => updateDashboard(data))
             .catch(error => console.error('Errore durante il recupero dei messaggi:', error));
@@ -12,17 +12,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Funzione per aggiornare la dashboard con i dati ricevuti
     function updateDashboard(data) {
-        dataWater.append(data);
-        let lastTen = dataWater.slice(-10);
+        data.forEach(element => {
+            element = element.water_level;
+            dataWater.push(element);
+        });
         // Chart setup
         const graph = document.getElementById('graph').getContext('2d');
         const waterLevelChart = new Chart(graph, {
             type: 'line',
             data: {
-                labels: Array.from({ length: 10 }, (_, i) => i + 1),
+                labels: Array.from({ length: dataWater.length }, (_, i) => i + 1),
                 datasets: [{
                     label: 'Water Level',
-                    data: lastTen,
+                    data: dataWater,
                     borderColor: 'blue',
                     borderWidth: 1,
                     fill: true
@@ -38,11 +40,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         // Update System Status
-        const systemStatus = document.getElementById('systemStatus');
+        const systemStatus = document.getElementById('status');
         systemStatus.textContent = data.systemStatus;
 
         // Update Valve Opening Level
-        const valveControl = document.getElementById('valveControl');
+        const valveControl = document.getElementById('valve-control');
         const valveLevel = document.getElementById('valveLevel');
 
         valveControl.value = data.valveOpeningLevel;
