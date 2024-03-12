@@ -8,27 +8,33 @@ app = Flask(__name__)
 CORS(app)  # Abilita CORS per tutte le route
 
 messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
+status = 'ALARM_TO_LOW'
 
 # fake dati per testare js
 messages.append({
     'water_level': 10,
-    'valve_opening_level': 75 
+    'valve_opening_level': 75,
+    'system_status': status
 })
 messages.append({
     'water_level': 15,
-    'valve_opening_level': 70
+    'valve_opening_level': 70,
+    'system_status': status
 })
 messages.append({
     'water_level': 20,
-    'valve_opening_level': 65
+    'valve_opening_level': 65,
+    'system_status': status
 })
 messages.append({
     'water_level': 20,
-    'valve_opening_level': 65
+    'valve_opening_level': 65,
+    'system_status': status
 })
 messages.append({
     'water_level': 15,
-    'valve_opening_level': 70
+    'valve_opening_level': 70,
+    'system_status': status
 })
 
 # Configurazione del broker MQTT
@@ -60,6 +66,9 @@ def subscribe(client: mqtt_client):
             payload_dict = json.loads(msg.payload.decode())
             # Aggiungi il messaggio alla lista, la conversione json viene fatta dopo, prima dell'invio
             messages.append(payload_dict)
+            # Converti il dizionario in una stringa JSON
+            json_payload = json.dumps(payload_dict)
+            print(json_payload)
         except json.decoder.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
 
@@ -68,10 +77,9 @@ def subscribe(client: mqtt_client):
 
 
 def run():
-    pass
-    #client = connect_mqtt()
-    #subscribe(client)
-    #client.loop_forever()
+    client = connect_mqtt()
+    subscribe(client)
+    client.loop_forever()
 
 # Endpoint per ottenere i messaggi
 @app.route('/api/messages', methods=['GET'])

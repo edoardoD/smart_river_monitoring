@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     let dataWater = [];
+    let valve;
+    let system_status;
 
     // Funzione per ottenere i messaggi dal server Flask
     function getMessages() {
@@ -13,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Funzione per aggiornare la dashboard con i dati ricevuti
     function updateDashboard(data) {
         data.forEach(element => {
+            valve = element.valve_opening_level;
+            system_status = element.system_status;
             element = element.water_level;
             dataWater.push(element);
         });
@@ -41,14 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Update System Status
         const systemStatus = document.getElementById('status');
-        systemStatus.textContent = data.systemStatus;
+        systemStatus.textContent = system_status;
 
         // Update Valve Opening Level
         const valveControl = document.getElementById('valve-control');
         const valveLevel = document.getElementById('valveLevel');
-
-        valveControl.value = data.valveOpeningLevel;
-        valveLevel.textContent = data.valveOpeningLevel;
+        valveLevel.value = valve;
 
         valveControl.addEventListener('input', function() {
             const valveLevel = this.value;
