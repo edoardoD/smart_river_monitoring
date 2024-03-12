@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let dataWater = [];
     let valve;
     let system_status;
+    let WL4 = 30;
 
     // Funzione per ottenere i messaggi dal server Flask
     function getMessages() {
@@ -14,12 +15,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Funzione per aggiornare la dashboard con i dati ricevuti
     function updateDashboard(data) {
+
+        //processinga data
         data.forEach(element => {
             valve = element.valve_opening_level;
             system_status = element.system_status;
             element = element.water_level;
             dataWater.push(element);
         });
+
         // Chart setup
         const graph = document.getElementById('graph').getContext('2d');
         const waterLevelChart = new Chart(graph, {
@@ -48,15 +52,22 @@ document.addEventListener("DOMContentLoaded", function() {
         systemStatus.textContent = system_status;
 
         // Update Valve Opening Level
-        const valveControl = document.getElementById('valve-control');
         const valveLevel = document.getElementById('valveLevel');
         valveLevel.value = valve;
 
-        valveControl.addEventListener('input', function() {
-            const valveLevel = this.value;
-            valveLevel.textContent = valveLevel;
+        // Send Valve Opening Level
+        const setValveButton = document.getElementById("set_button");
+        setValveButton.addEventListener('input', function() {
+            valve = valveLevel.value;
             // TODO: Send API request to update valve opening level
         });
+
+        // Update Water Level Status
+        const water = document.getElementById("water");
+        const valueWater = document.getElementById("value");
+        water.style.opacity = 1;
+        valueWater.textContent = (dataWater[dataWater.length-1]/WL4)*100 + "%";
+        water.style.height = valueWater.textContent;
     }
 
     // Chiama la funzione per ottenere i messaggi e aggiornare la dashboard
