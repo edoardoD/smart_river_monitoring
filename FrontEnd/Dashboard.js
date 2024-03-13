@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const water = document.getElementById("water");
         const valueWater = document.getElementById("value");
         water.style.opacity = 1;
-        valueWater.textContent = (dataWater[dataWater.length-1]/WL4)*100 + "%";
+        valueWater.textContent = Math.round((dataWater[dataWater.length-1]/WL4)*100) + "%";
         water.style.height = valueWater.textContent;
     }
 

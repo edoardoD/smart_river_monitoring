@@ -36,6 +36,11 @@ messages.append({
     'valve_opening_level': 70,
     'system_status': status
 })
+messages.append({
+    'water_level': 25,
+    'valve_opening_level': 30,
+    'system_status': status
+})
 
 # Configurazione del broker MQTT
 broker = 'broker.emqx.io'
