@@ -5,7 +5,6 @@ class Task
 {
 
 public:
-public:
   virtual void tick() = 0;
 
   bool updateAndCheckTime(int basePeriod)
