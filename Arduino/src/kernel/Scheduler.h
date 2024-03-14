@@ -1,20 +1,17 @@
 #ifndef __SCHEDULER__
 #define __SCHEDULER__
-
-#include "Task.h"
-
-#define MAX_TASKS 50
-
+#include "task.h"
+constexpr int MAX_TASKS = 10;
 class Scheduler {
-  
-  int basePeriod;
-  int nTasks;
-  Task* taskList[MAX_TASKS];  
 
+ int basePeriod;
+ int nTasks{0};
+ Task* taskList[MAX_TASKS]{};
 public:
-  void init(int basePeriod);  
-  virtual bool addTask(Task* task);  
-  virtual void schedule();
-};
 
+ Scheduler(int basePeriod);
+ virtual bool addTask(Task* task);
+ virtual void schedule();
+
+};
 #endif
