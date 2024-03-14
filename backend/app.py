@@ -1,8 +1,4 @@
 from flask import Flask, jsonify
-<<<<<<< HEAD
-=======
-from flask_cors import CORS  # Per risolvere problemi di CORS (Cross-Origin Resource Sharing)
->>>>>>> FrontEnd
 import random
 import json
 from paho.mqtt import client as mqtt_client
@@ -70,16 +66,5 @@ def run():
 def get_messages():
     return jsonify(messages)
 
-<<<<<<< HEAD
-# Endpoint per ottenere i messaggi
-@app.route('/api/messages', methods=['GET'])
-def get_messages():
-    return jsonify(messages)
-
-
 if __name__ == '__main__':
     app.run(debug=True)
-=======
-if __name__ == '__main__':
-    app.run(debug=True)
->>>>>>> FrontEnd
