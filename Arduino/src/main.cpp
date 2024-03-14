@@ -2,10 +2,11 @@
 #include "kernel/Scheduler.h"
 #include "Kernel/Task.h"
 
-Scheduler sched;
+#define DEBUG 
+Scheduler sched = Scheduler(50);
 
 void setup() {
-  sched.init(50);
+  
 }
 
 void loop() {
