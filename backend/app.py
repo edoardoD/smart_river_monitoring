@@ -9,6 +9,7 @@ CORS(app)  # Abilita CORS per tutte le route
 
 messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
 status = 'ALARM_TO_LOW'
+valve_opening_level = 0
 
 # fake dati per testare js
 messages.append({
@@ -45,7 +46,12 @@ def subscribe(client: mqtt_client):
             # Converti il payload in un dizionario Python
             payload_dict = json.loads(msg.payload.decode())
             # Aggiungi il messaggio alla lista, la conversione json viene fatta dopo, prima dell'invio
-            messages.append(payload_dict)
+            water_level = payload_dict # potrebbe volerci: payload_dict.get('water_level')
+            messages.append({
+                'water_level': water_level,
+                'valve_opening_level': valve_opening_level,
+                'system_status': status
+            })
             # Converti il dizionario in una stringa JSON
             json_payload = json.dumps(payload_dict)
             print(json_payload)
