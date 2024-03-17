@@ -1,8 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import random
 import json
 from paho.mqtt import client as mqtt_client
 from flask_cors import CORS
+import serial
 
 app = Flask(__name__)
 CORS(app)  # Abilita CORS per tutte le route
@@ -72,5 +73,35 @@ def run():
 def get_messages():
     return jsonify(messages)
 
+#   In questo codice:
+# - Abbiamo definito un endpoint /api/send_value che accetta richieste POST.
+# - Quando viene inviata una richiesta POST a questo endpoint, il valore viene estratto dal corpo della richiesta JSON.
+# - Il valore estratto viene quindi passato alla funzione send_value_to_arduino per essere inviato all'Arduino tramite la porta seriale.
+# - Infine, viene restituita una risposta JSON per confermare che il valore è stato inviato con successo all'Arduino.
+# - Assicurati di aggiornare la porta seriale (/dev/ttyUSB0) e il baud rate (9600) secondo la tua configurazione.
+def send_value_to_arduino(value):
+    try:
+        # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
+        ser = serial.Serial('/dev/ttyUSB0', 9600)  # Assicurati di usare la porta seriale corretta
+        # Invia il valore tramite la porta seriale
+        ser.write(str(value).encode())
+        # Chiudi la porta seriale
+        ser.close()
+        print(f"Value {value} sent to Arduino successfully")
+    except serial.SerialException as e:
+        print(f"Error opening serial port: {e}")
+    except Exception as e:
+        print(f"Error: {e}")
+
+@app.route('/api/send_value', methods=['POST'])
+def send_value():
+    try:
+        data = request.get_json()
+        value = data['value']
+        send_value_to_arduino(value)
+        return jsonify({"message": "Value sent successfully to Arduino"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+######################################################################
 if __name__ == '__main__':
     app.run(debug=True)
