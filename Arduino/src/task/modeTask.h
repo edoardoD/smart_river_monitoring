@@ -1,24 +1,21 @@
-#ifndef __MODE_TASK__
-#define __MODE_TASK__
+#ifndef __MODETASK__
+#define __MODETASK__
 
 #include "../kernel/Task.h"
 
 class ModeTask : public Task
 {
-private:
-    /* data */
 public:
-    ModeTask : public Task(/* args */);
-    ModeTask : public ~Task();
+  ModeTask(int period) : Task(period)
+  {
+  }
+
+  void tick()
+  {
+    // Serial.println("ModeTask");
+  }
+  private: 
 };
-
-modeTask : public Task::modeTask : public Task(/* args */)
-{
-}
-
-modeTask : public Task::~modeTask : public Task()
-{
-}
 
 
 
