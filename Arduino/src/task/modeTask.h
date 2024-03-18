@@ -1,22 +1,24 @@
 #ifndef __MODETASK__
 #define __MODETASK__
 
-#include "../kernel/Task.h"
+#include "../kernel/TaskWithState.h"
+#include "../model/Gateway.h"
 
-class ModeTask : public Task
+enum class BtnState
 {
+  RELEASED,
+  PRESSING
+};  
+
+class ModeTask : public TaskWithState<BtnState>
+{
+
+private:
+  
+  Gateway *gtw;
 public:
-  ModeTask(int period) : Task(period)
-  {
-  }
-
-  void tick()
-  {
-    // Serial.println("ModeTask");
-  }
-  private: 
+  ModeTask(Gateway* gateway, int period);
+  void tick();
+    
 };
-
-
-
 #endif // __MODE_TASK__
