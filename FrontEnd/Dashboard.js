@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let dataWater = [];
     let valve;
     let system_status;
-    let WL4 = 30;
+    let WL4 = 30; // TODO:set-correct-value. Water Level 4 max-high of the river
 
     // Funzione per ottenere i messaggi dal server Flask
     function getMessages() {
@@ -11,6 +11,29 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => updateDashboard(data))
             .catch(error => console.error('Errore durante il recupero dei messaggi:', error));
+    }
+
+    // Funzione per inviare un messaggio al server Flusk
+    function sendMessage() {
+
+        const dato = {
+            value: valve
+        }
+
+        const opzioni = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(dato)
+        }
+
+        fetch('http://127.0.0.1:5000/api/send_value', opzioni)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error('Errore durante l\'invio del vaolre al server');
+                }
+                console.log('Valore inviato con successo al server');
+            })
+            .catch(error => console.error('Errore durante l\'invio del vaolre al server'));
     }
 
     // Funzione per aggiornare la dashboard con i dati ricevuti
@@ -59,7 +82,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const setValveButton = document.getElementById("set_button");
         setValveButton.addEventListener('input', function() {
             valve = valveLevel.value;
-            // TODO: Send API request to update valve opening level
+            // Send API request to update valve opening level
+            sendMessage();
         });
 
         // Update Water Level Status
