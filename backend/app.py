@@ -9,11 +9,13 @@ app = Flask(__name__)
 CORS(app)  # Abilita CORS per tutte le route
 
 messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
-status = 'ALARM_TO_LOW'
+status = 'UNDEFINED'
 valve_opening_level = 0
+frequency = 5000 # TODO: da migliorare, valore per i test 5000ms = 5sec
 
 # fake dati per testare js
 messages.append({
+    'frequency': frequency,
     'water_level': 10,
     'valve_opening_level': 75,
     'system_status': status
@@ -71,7 +73,9 @@ def run():
 # Endpoint per ottenere i messaggi
 @app.route('/api/messages', methods=['GET'])
 def get_messages():
-    return jsonify(messages)
+    json_msg = jsonify(messages)
+    messages.clear()
+    return json_msg
 
 #   In questo codice:
 # - Abbiamo definito un endpoint /api/send_value che accetta richieste POST.

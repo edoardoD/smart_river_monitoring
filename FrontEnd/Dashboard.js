@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    let dataWater = [];
-    let valve;
+    let dataWater = []; // List of water level values over time
+    let valve; // opening level valve
     let system_status;
     let WL4 = 30; // TODO:set-correct-value. Water Level 4 max-high of the river
+    let frequency = 0; // Frequency to be received from the server
+    let waterLevelChart; 
 
     // Funzione per ottenere i messaggi dal server Flask
     function getMessages() {
@@ -13,9 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error('Errore durante il recupero dei messaggi:', error));
     }
 
-    // Funzione per inviare un messaggio al server Flusk
+    // Funzione per inviare un messaggio al server Flask
     function sendMessage(valve) {
-
         const dato = {
             value: valve
         }
@@ -29,33 +30,22 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch('http://127.0.0.1:5000/api/send_value', opzioni)
             .then(response => {
                 if(!response.ok){
-                    throw new Error('Errore durante l\'invio del vaolre al server');
+                    throw new Error('Errore durante l\'invio del valore al server');
                 }
                 console.log('Valore inviato con successo al server');
             })
-            .catch(error => console.error('Errore durante l\'invio del vaolre al server'));
+            .catch(error => console.error('Errore durante l\'invio del valore al server'));
     }
 
-    // Funzione per aggiornare la dashboard con i dati ricevuti
-    function updateDashboard(data) {
-
-        //processinga data
-        data.forEach(element => {
-            valve = element.valve_opening_level;
-            system_status = element.system_status;
-            element = element.water_level;
-            dataWater.push(element);
-        });
-
-        // Chart setup
+    function drawChart(labels, data) {
         const graph = document.getElementById('graph').getContext('2d');
-        const waterLevelChart = new Chart(graph, {
+        return new Chart(graph, {
             type: 'line',
             data: {
-                labels: Array.from({ length: dataWater.length }, (_, i) => i + 1),
+                labels: labels,
                 datasets: [{
                     label: 'Water Level',
-                    data: dataWater,
+                    data: data,
                     borderColor: 'blue',
                     borderWidth: 1,
                     fill: true
@@ -63,12 +53,34 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             options: {
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    y: { beginAtZero: true }
                 }
             }
         });
+    }
+
+    // Funzione per aggiornare la dashboard con i dati ricevuti
+    function updateDashboard(data) {
+
+        // Processing data
+        data.forEach(element => {
+            frequency = element.frequency;
+            valve = element.valve_opening_level;
+            system_status = element.system_status;
+            element = element.water_level;
+            dataWater.push(element);
+        });
+
+        if (waterLevelChart) {
+            // se il grafico esiste aggionra solo i dati
+            waterLevelChart.data.labels = Array.from({ length: dataWater.length }, (_, i) => i + 1);
+            waterLevelChart.data.datasets[0].data = dataWater;
+            waterLevelChart.update();
+
+        } else {
+            // se il grafico non esiste ne crea uno
+            waterLevelChart = drawChart(Array.from({ length: dataWater.length }, (_, i) => i + 1), dataWater);
+        }
 
         // Update System Status
         const systemStatus = document.getElementById('status');
@@ -92,6 +104,9 @@ document.addEventListener("DOMContentLoaded", function() {
         water.style.opacity = 1;
         valueWater.textContent = Math.round((dataWater[dataWater.length-1]/WL4)*100) + "%";
         water.style.height = valueWater.textContent;
+
+        // Call getMessages() again after the received frequency
+        setTimeout(getMessages, frequency);
     }
 
     // Chiama la funzione per ottenere i messaggi e aggiornare la dashboard
