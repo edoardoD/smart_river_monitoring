@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Funzione per inviare un messaggio al server Flusk
-    function sendMessage() {
+    function sendMessage(valve) {
 
         const dato = {
             value: valve
@@ -80,10 +80,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Send Valve Opening Level
         const setValveButton = document.getElementById("set_button");
-        setValveButton.addEventListener('input', function() {
+        setValveButton.addEventListener('click', function() {
             valve = valveLevel.value;
             // Send API request to update valve opening level
-            sendMessage();
+            sendMessage(valve);
         });
 
         // Update Water Level Status
