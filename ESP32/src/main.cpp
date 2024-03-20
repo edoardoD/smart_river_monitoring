@@ -95,10 +95,10 @@ void loop() {
   unsigned long now = millis();
   if (now - lastMsgTime > 10000) {
     lastMsgTime = now;
-    value++;
+    value = 10; /* da modificare con il vero valore del livello dell'acqua*/
 
     /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
+    snprintf (msg, MSG_BUFFER_SIZE, "#%ld", value);
 
     Serial.println(String("Publishing message: ") + msg);
     

@@ -124,8 +124,9 @@ body {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 55%; /* edit with javascript based on the value taken from the server */
+            height: 0; /* edit with javascript based on the value taken from the server */
             border-radius: 10px;
+            opacity: 0;
         }
     }
 }
