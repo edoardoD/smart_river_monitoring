@@ -11,7 +11,7 @@ CORS(app)  # Abilita CORS per tutte le route
 messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
 status = 'UNDEFINED'
 valve_opening_level = 0
-frequency = 5000 # TODO: da migliorare, valore per i test 5000ms = 5sec
+frequency = 50000 # TODO: da migliorare, valore per i test 50 000ms = 0.5min
 
 # fake dati per testare js
 messages.append({
