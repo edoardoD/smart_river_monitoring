@@ -19,7 +19,7 @@ void ModeTask::tick()
     case BtnState::PRESSING:
         if (!gtw->buttonRead())
         {
-            gtw->ChangeMode();   
+            gtw->changeMode();   
             setState(BtnState::RELEASED);
         }
         break;
