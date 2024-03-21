@@ -23,10 +23,7 @@ public:
         return state;
     }
 
-    void setState(SysTatus newState)
-    {
-        state = newState;
-    }
+    
     Gateway();
 
     /***
