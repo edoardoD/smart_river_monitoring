@@ -14,7 +14,7 @@ void Gateway::init()
     Serial.println("Gateway init");
 }
 
-String enum_toString(SysTatus status)
+String Gateway::enum_toString(SysTatus status)
 {
     switch (status)
     {
@@ -45,6 +45,8 @@ int Gateway::getPotentioMeterValue() {
 }
 
 void Gateway::pritnState() {
-    Serial.println(enum_toString(state));
-    Serial.println("Gate degree: " + String(servoMotor->getPosition()));
+    
+    String message = "Mode: "+this->enum_toString(this->state) +", Gate degree: " + servoMotor->getPosition();
+    lcd->show(message);
 }
+
