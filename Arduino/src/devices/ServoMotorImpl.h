@@ -8,6 +8,7 @@
 class ServoMotorImpl: public ServoMotor{
     private:
         int pin;
+        int degree;
         ServoTimer2 motor;
 
     public:
@@ -16,6 +17,7 @@ class ServoMotorImpl: public ServoMotor{
         void on() override;
         void off() override;
         void setPosition(int angle) override;
+        int getPosition();
     
 };
 
