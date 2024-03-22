@@ -19,7 +19,11 @@ void ServoMotorImpl::setPosition(int angle) {
     } else if (angle < 0) {
         angle = 0;
     }
-
+    degree = angle;
     double coeff = (2400.0 - 544.0) / 180;
-    motor.write((int)(544 + angle * coeff));
+    motor.write((int)544 + angle * coeff);
+}
+
+int ServoMotorImpl::getPosition() {
+    return degree;
 }
