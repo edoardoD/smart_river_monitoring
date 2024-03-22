@@ -3,10 +3,10 @@
 #include "Arduino.h"
 
 ButtonImpl::ButtonImpl(int pin) : pin(pin){
-    pinMode(pin, INPUT);
+    pinMode(pin, INPUT_PULLUP);
     
 }
 
 bool ButtonImpl::isPressed() {
-    return digitalRead(pin); 
+    return digitalRead(pin);
 }
