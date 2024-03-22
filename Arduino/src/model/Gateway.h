@@ -6,16 +6,21 @@
 #include "devices/ButtonImpl.h"
 #include "devices/ServoMotorImpl.h"
 #include "devices/Lcd.h"
+#include "devices/Pot.h"
 
 class Gateway
 {
 private:
-    int gateDegree;
     bool automode;
     Lcd *lcd;
     ServoMotorImpl *servoMotor;
     ButtonImpl *button;
     SysTatus state;
+    Potentiometer* pot;
+    /***
+     * @brief enum class to string of system status
+     */
+    String enum_toString(SysTatus status);
 
 public:
     SysTatus getState() const
@@ -23,7 +28,6 @@ public:
         return state;
     }
 
-    
     Gateway();
 
     /***
@@ -45,11 +49,7 @@ public:
      ***/
     void setGateDegree(int degree);
 
-    /**
-     * @brief get the current degree of the gate
-     ***/
-    int getGateDegree();
-
+   
     /**
      * @brief get value of potentiometer
      ***/
