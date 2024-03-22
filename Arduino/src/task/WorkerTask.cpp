@@ -12,7 +12,6 @@ void WorkerTask::tick()
     {
     case SysTatus::AUTO:
 
-        gtw->pritnState();
         if (MsgService.isMsgAvailable())
         {
             Msg *msg = MsgService.receiveMsg();
@@ -21,10 +20,11 @@ void WorkerTask::tick()
             Serial.println(valveValue);
             gtw->setGateDegree(valveValue);
         }
+        gtw->pritnState();
         break;
     case SysTatus::MANUAL:
-        gtw->pritnState();
         gtw->setGateDegree(gtw->getPotentioMeterValue());
+        gtw->pritnState();
         break;
     default:
         break;
