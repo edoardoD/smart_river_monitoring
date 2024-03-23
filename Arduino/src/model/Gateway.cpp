@@ -41,12 +41,13 @@ void Gateway::setGateDegree(int degree) {
 
 
 int Gateway::getPotentioMeterValue() {
+    pot->sync();
     return pot->getValue();
 }
 
 void Gateway::pritnState() {
-    
     String message = "Mode: "+this->enum_toString(this->state) +", Gate degree: " + servoMotor->getPosition();
+    lcd->clear();
     lcd->show(message);
 }
 
