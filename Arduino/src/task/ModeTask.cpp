@@ -1,10 +1,11 @@
 #include "ModeTask.h"
 #include "Arduino.h"
-
+#include "model/logger.h"
 ModeTask::ModeTask(Gateway *gateway, int period) : TaskWithState(period)
 {
     gtw = gateway;
     setState(BtnState::RELEASED);
+    
 }
 
 void ModeTask::tick()
@@ -12,15 +13,15 @@ void ModeTask::tick()
     switch (this->getState())
     {
     case BtnState::RELEASED:
-        Serial.println("RELEASED \n");
-        if (!gtw->buttonRead())
+        logger("Released");
+        if (gtw->buttonRead())
         {
             setState(BtnState::PRESSING);
         }
         break;
     case BtnState::PRESSING:
-        Serial.println("PRESSING \n");
-        if (gtw->buttonRead())
+        logger("Pressing");
+        if (!gtw->buttonRead())
         {
             gtw->changeMode();   
             setState(BtnState::RELEASED);
