@@ -36,7 +36,9 @@ void Gateway::changeMode() {
 }
 
 void Gateway::setGateDegree(int degree) {
-    servoMotor->setPosition(degree);
+    if(servoMotor->getPosition() != degree) {
+        servoMotor->setPosition(degree);
+    }
 }
 
 
