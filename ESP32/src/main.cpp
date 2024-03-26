@@ -1,5 +1,6 @@
 #include <WiFiManager.h>
 #include <MqttManager.h>
+#include <Sonar.h>
 #define MSG_BUFFER_SIZE  50
 
 /* wifi network info */
