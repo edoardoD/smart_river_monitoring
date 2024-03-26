@@ -12,7 +12,7 @@ void Potentiometer::sync(){
 
 float Potentiometer::getValue(){
   
-  value = map(value, 0, 1023, 0, 100);
+  value = map(value, 0, 1023, 0, 180);
   return value;
 }
 
