@@ -11,7 +11,7 @@ void WorkerTask::tick()
     switch (gtw->getState())
     {
     case SysTatus::AUTO:
-
+      
         if (MsgService.isMsgAvailable())
         {
             Msg *msg = MsgService.receiveMsg();
@@ -23,6 +23,7 @@ void WorkerTask::tick()
         gtw->pritnState();
         break;
     case SysTatus::MANUAL:
+        
         gtw->setGateDegree(gtw->getPotentioMeterValue());
         gtw->pritnState();
         break;

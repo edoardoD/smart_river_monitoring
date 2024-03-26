@@ -5,7 +5,6 @@ ModeTask::ModeTask(Gateway *gateway, int period) : TaskWithState(period)
 {
     gtw = gateway;
     setState(BtnState::RELEASED);
-    
 }
 
 void ModeTask::tick()
