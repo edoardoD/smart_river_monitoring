@@ -1,8 +1,8 @@
 
 #ifndef __CONFIG__
 #define __CONFIG__
-#include <arduino.h>
 #include <string.h>
+#include <Arduino.h>
 /***
  * @brief analog pins setting
  */
@@ -23,9 +23,5 @@ enum class SysTatus
     AUTO,
     MANUAL
 };
-
-
-
-
 
 #endif
