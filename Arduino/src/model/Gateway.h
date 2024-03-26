@@ -45,7 +45,7 @@ public:
      ***/
     void init();
     /**
-     * @brief set gate degree to open/close
+     * @brief set gate degree only if the current degree is different
      ***/
     void setGateDegree(int degree);
 
