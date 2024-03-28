@@ -1,108 +1,75 @@
-#include <WiFi.h>
-#include <PubSubClient.h>
+#include <WiFiManager.h>
+#include <MqttManager.h>
+#include <Sonar.h>
 #define MSG_BUFFER_SIZE  50
 
-/* wifi network info */
+/* wifi network info, replace these with yours */
+const char* ssid = "Home&Life SuperWiFi-726E";
+const char* password = "73JR8QPKDBTLNNTQ";
 
-const char* ssid = "Alle";
-const char* password = "Franco789?";
-
-/* MQTT server address */
+/* MQTT server address and topic */
 const char* mqtt_server = "broker.emqx.io";
+const char* topic = "eps32/topic"; 
+// TODO: creare topic per la frequenza !
 
-/* MQTT topic */
-const char* topic = "eps32/topic";
+/* Sonar */
+#define TRIGGER_PIN  0      //replace with real value
+#define ECHO_PIN 1          //replace with real value
+const long max_time = 1000; //replace with real value
 
-/* MQTT client management */
+/* Define Led */
+#define GREEN_LED 2
+#define RED_LED 3
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+#define F1 10000
 
+WiFiManager wifiManager(ssid, password);
+MQTTManager mqttManager(mqtt_server, topic);
+Sonar sonar(TRIGGER_PIN, ECHO_PIN, max_time);
 
 unsigned long lastMsgTime = 0;
 char msg[MSG_BUFFER_SIZE];
-int value = 0;
-
-
-void setup_wifi() {
-
-  delay(10);
-
-  Serial.println(String("Connecting to ") + ssid);
-
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
-}
-
-/* MQTT subscribing callback */
-
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.println(String("Message arrived on [") + topic + "] len: " + length );
-}
-
-void reconnect() {
-  
-  // Loop until we're reconnected
-  
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    
-    // Create a random client ID
-    String clientId = String("esiot-2122-client-")+String(random(0xffff), HEX);
-
-    // Attempt to connect
-    if (client.connect(clientId.c_str())) {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      // client.publish("outTopic", "hello world");
-      // ... and resubscribe
-      client.subscribe(topic);
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
-    }
-  }
-}
+unsigned long frequency = F1; // default value modifiable by the server
 
 void setup() {
   Serial.begin(115200);
-  setup_wifi();
+  wifiManager.setup();
+  mqttManager.setup();
   randomSeed(micros());
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
 }
 
 void loop() {
-
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
-
+  // reconnect to MQTT if connection lost
+  mqttManager.reconnect();
+  
   unsigned long now = millis();
-  if (now - lastMsgTime > 10000) {
-    lastMsgTime = now;
-    value = 10; /* da modificare con il vero valore del livello dell'acqua*/
+  // if is time, mesure distance and send data
+  if (now - lastMsgTime > frequency) {
+    float value = sonar.getDistance();
+    bool success = send_distance(value);
+    if (success) {
+      digitalWrite(GREEN_LED,HIGH);
+      digitalWrite(RED_LED, LOW);
+    } else {
+      digitalWrite(GREEN_LED,LOW);
+      digitalWrite(RED_LED, HIGH);
+    }
+    lastMsgTime = millis();
+  }
+}
 
-    /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "#%ld", value);
+bool send_distance(int val) {
+  /* creating a msg in the buffer */
+    snprintf (msg, MSG_BUFFER_SIZE, "#%ld", val);
 
     Serial.println(String("Publishing message: ") + msg);
     
     /* publishing the msg */
-    client.publish(topic, msg);  
-  }
+    return mqttManager.publish(msg); 
 }
