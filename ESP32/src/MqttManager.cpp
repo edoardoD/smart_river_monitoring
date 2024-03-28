@@ -21,6 +21,6 @@ void MQTTManager::reconnect() {
     }
 }
 
-void MQTTManager::publish(const char* msg) {
-    _client.publish(_topic, msg);
+boolean MQTTManager::publish(const char* msg) {
+    return _client.publish(_topic, msg);
 }
