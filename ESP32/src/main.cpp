@@ -13,13 +13,13 @@ const char* topic = "eps32/topic";
 // TODO: creare topic per la frequenza !
 
 /* Sonar */
-#define TRIGGER_PIN  0      //replace with real value
-#define ECHO_PIN 1          //replace with real value
+#define TRIGGER_PIN  D0      //replace with real value
+#define ECHO_PIN D1          //replace with real value
 const long max_time = 1000; //replace with real value
 
 /* Define Led */
-#define GREEN_LED 2
-#define RED_LED 3
+#define GREEN_LED D2
+#define RED_LED D3
 
 #define F1 10000
 
@@ -43,6 +43,8 @@ void setup() {
   digitalWrite(GREEN_LED, LOW);
   digitalWrite(RED_LED, HIGH);
 }
+
+bool send_distance(int val);
 
 void loop() {
   // reconnect to MQTT if connection lost

@@ -1,7 +1,7 @@
 #ifndef WiFiManager_h
 #define WiFiManager_h
 
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 
 class WiFiManager {
     public:
