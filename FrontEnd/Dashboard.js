@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let valve; // opening level valve
     let system_status;
     let WL4 = 30; // TODO:set-correct-value. Water Level 4 max-high of the river
-    let frequency = 0; // Frequency to be received from the server
+    let frequency = 10000; // Frequency to be received from the server (10000 = 10 sc default)
     let waterLevelChart; 
 
     // Funzione per ottenere i messaggi dal server Flask

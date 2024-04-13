@@ -1,25 +1,18 @@
 from flask import Flask, jsonify, request
-import random
-import json
 from paho.mqtt import client as mqtt_client
 from flask_cors import CORS
+import random
+import json
 import serial
+import asyncio
 
 app = Flask(__name__)
 CORS(app)  # Abilita CORS per tutte le route
 
-messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT
-status = 'UNDEFINED'
-valve_opening_level = 0
-frequency = 50000 # TODO: da migliorare, valore per i test 50 000ms = 0.5min
-
-# fake dati per testare js
-messages.append({
-    'frequency': frequency,
-    'water_level': 10,
-    'valve_opening_level': 75,
-    'system_status': status
-})
+messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT (non ancora letti da js)
+status = 'UNDEFINED'     # TODO: improve with real status
+valve_opening_level = 0  # TODO: improve with real valve opening level [%]
+frequency = 15000        # TODO: improve, 15 000ms = 15sec solo per i test [sec]
 
 # Configurazione del broker MQTT
 broker = 'broker.emqx.io'
@@ -29,6 +22,7 @@ topic = "eps32/topic"
 client_id = f'subscribe-{random.randint(0, 100)}'
 
 
+# crea un client e lo connette al nostro brokr
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -41,23 +35,17 @@ def connect_mqtt() -> mqtt_client:
     client.connect(broker, port)
     return client
 
-
+# sottoscrive il client creato al topic esp32
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         try:
-            # Converti il payload in un dizionario Python
-            payload_dict = json.loads(msg.payload.decode())
-            # Aggiungi il messaggio alla lista, la conversione json viene fatta dopo, prima dell'invio
-            water_level = payload_dict # potrebbe volerci: payload_dict.get('water_level')
             messages.append({
-                'water_level': water_level,
+                'frequency': frequency,
+                'water_level': msg.payload.decode(),
                 'valve_opening_level': valve_opening_level,
                 'system_status': status
             })
-            # Converti il dizionario in una stringa JSON
-            json_payload = json.dumps(payload_dict)
-            print(json_payload)
         except json.decoder.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
 
@@ -65,10 +53,11 @@ def subscribe(client: mqtt_client):
     client.on_message = on_message
 
 
-def run():
+async def main():
     client = connect_mqtt()
     subscribe(client)
-    client.loop_forever()
+    client.loop_start()
+    app.run(debug=True)
 
 # Endpoint per ottenere i messaggi
 @app.route('/api/messages', methods=['GET'])
@@ -86,7 +75,7 @@ def get_messages():
 def send_value_to_arduino(value):
     try:
         # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
-        ser = serial.Serial('/dev/ttyUSB0', 9600)  # Assicurati di usare la porta seriale corretta
+        ser = serial.Serial('/dev/ttyUSB0', 9600)
         # Invia il valore tramite la porta seriale
         ser.write(str(value).encode())
         # Chiudi la porta seriale
@@ -106,6 +95,7 @@ def send_value():
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-######################################################################
+    
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    asyncio.run(main())
