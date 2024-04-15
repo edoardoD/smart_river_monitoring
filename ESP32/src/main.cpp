@@ -15,7 +15,7 @@ const char* topic = "eps32/topic";
 /* Sonar */
 #define TRIGGER_PIN  D0      //replace with real value
 #define ECHO_PIN D1          //replace with real value
-const long max_time = 1000; //replace with real value
+const long max_time = 5000; //replace with real value
 
 /* Define Led */
 #define GREEN_LED D2
@@ -54,7 +54,7 @@ void loop() {
   // if is time, mesure distance and send data
   if (now - lastMsgTime > frequency) {
     float value = sonar.getDistance();
-    bool success = send_distance(value);
+    bool success = send_distance(value+5);
     if (success) {
       digitalWrite(GREEN_LED,HIGH);
       digitalWrite(RED_LED, LOW);
@@ -68,7 +68,7 @@ void loop() {
 
 bool send_distance(int val) {
   /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "#%ld", val);
+    snprintf (msg, MSG_BUFFER_SIZE, "%d", val);
 
     Serial.println(String("Publishing message: ") + msg);
     
