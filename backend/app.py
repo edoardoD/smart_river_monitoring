@@ -40,9 +40,11 @@ def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         try:
+            water_level = float(msg.payload.decode())
+            update_system_state(water_level)
             messages.append({
                 'frequency': frequency,
-                'water_level': msg.payload.decode(),
+                'water_level': water_level,
                 'valve_opening_level': valve_opening_level,
                 'system_status': status
             })
@@ -51,6 +53,29 @@ def subscribe(client: mqtt_client):
 
     client.subscribe(topic)
     client.on_message = on_message
+
+def update_system_state(water_level):
+    global status, valve_opening_level, frequency
+    WL1, WL2, WL3, WL4 = 5, 10, 15, 20
+    F1, F2 = 15000, 10000
+
+    if water_level >= WL1 and water_level <= WL2:
+        status = 'NORMAL'
+        valve_opening_level = 25
+        frequency = F1
+    elif water_level < WL1:
+        status = 'ALARM-TOO-LOW'
+        valve_opening_level = 0
+    elif water_level > WL2:
+        if water_level <= WL3:
+            status = 'PRE-ALARM-TOO-HIGH'
+            frequency = F2
+        elif water_level <= WL4:
+            status = 'ALARM-TOO-HIGH'
+            valve_opening_level = 50
+        else:
+            status = 'ALARM-TOO-HIGH-CRITIC'
+            valve_opening_level = 100
 
 
 async def main():
