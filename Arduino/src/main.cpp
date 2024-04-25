@@ -7,14 +7,14 @@
   
   
 #define DEBUG 
-Scheduler sched = Scheduler(50);
+Scheduler sched = Scheduler(100);
 Gateway gtw = Gateway();  
 
 void setup() {
   gtw.init();
-  ModeTask modeTask = ModeTask(&gtw, 50);
+  ModeTask modeTask = ModeTask(&gtw, 100);
   sched.addTask(&modeTask);
-  WorkerTask workerTask = WorkerTask(&gtw, 100);
+  WorkerTask workerTask = WorkerTask(&gtw, 200);
   sched.addTask(&workerTask);
   Serial.begin(9600);
   Serial.println("Start");
