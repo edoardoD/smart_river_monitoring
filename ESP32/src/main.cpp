@@ -4,8 +4,8 @@
 #define MSG_BUFFER_SIZE  50
 
 /* wifi network info, replace these with yours */
-const char* ssid = "Home&Life SuperWiFi-726E";
-const char* password = "73JR8QPKDBTLNNTQ";
+const char* ssid = "Oliver";
+const char* password = "zxha6909";
 
 /* MQTT server address and topic */
 const char* mqtt_server = "broker.emqx.io";
@@ -54,7 +54,7 @@ void loop() {
   // if is time, mesure distance and send data
   if (now - lastMsgTime > frequency) {
     float value = sonar.getDistance();
-    bool success = send_distance(value+5);
+    bool success = send_distance(value);
     if (success) {
       digitalWrite(GREEN_LED,HIGH);
       digitalWrite(RED_LED, LOW);

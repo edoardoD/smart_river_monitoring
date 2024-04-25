@@ -55,7 +55,7 @@ def subscribe(client: mqtt_client):
     client.on_message = on_message
 
 def update_system_state(water_level):
-    global status, valve_opening_level, frequency
+    #global status, valve_opening_level, frequency
     WL1, WL2, WL3, WL4 = 5, 10, 15, 20
     F1, F2 = 15000, 10000
 
@@ -99,12 +99,13 @@ def get_messages():
 # - Assicurati di aggiornare la porta seriale (/dev/ttyUSB0) e il baud rate (9600) secondo la tua configurazione.
 def send_value_to_arduino(value):
     try:
+        with serial.Serial('COM8', 9600) as ser:
         # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
-        ser = serial.Serial('/dev/ttyUSB0', 9600)
+        #ser = serial.Serial('COM8', 9600)
         # Invia il valore tramite la porta seriale
-        ser.write(str(value).encode())
+            ser.write(str(value).encode())
         # Chiudi la porta seriale
-        ser.close()
+        #ser.close()
         print(f"Value {value} sent to Arduino successfully")
     except serial.SerialException as e:
         print(f"Error opening serial port: {e}")
@@ -117,6 +118,7 @@ def send_value():
         data = request.get_json()
         value = data['value']
         send_value_to_arduino(value)
+        valve_opening_level = value
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
