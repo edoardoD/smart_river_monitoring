@@ -1,18 +1,27 @@
-#include <Arduino.h>
-
-// put function declarations here:
-int myFunction(int, int);
+  #include <Arduino.h>
+#include "kernel/Scheduler.h"
+#include "Kernel/Task.h"
+#include "model/Gateway.h"
+#include "task/ModeTask.h"
+#include "task/WorkerTask.h"
+  
+  
+#define DEBUG 
+Scheduler sched = Scheduler(100);
+Gateway gtw = Gateway();  
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  gtw.init();
+  ModeTask modeTask = ModeTask(&gtw, 100);
+  sched.addTask(&modeTask);
+  WorkerTask workerTask = WorkerTask(&gtw, 200);
+  sched.addTask(&workerTask);
+  Serial.begin(9600);
+  Serial.println("Start");
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  sched.schedule();
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}

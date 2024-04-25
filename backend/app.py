@@ -77,7 +77,11 @@ def send_value_to_arduino(value):
         # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
         ser = serial.Serial('/dev/ttyUSB0', 9600)
         # Invia il valore tramite la porta seriale
-        ser.write(str(value).encode())
+        # ser.write(str(value).encode())
+        # Converti il valore in una stringa JSON
+        json_value = json.dumps(value)
+        # Invia il valore tramite la porta seriale
+        ser.write(json_value.encode())
         # Chiudi la porta seriale
         ser.close()
         print(f"Value {value} sent to Arduino successfully")
@@ -90,8 +94,8 @@ def send_value_to_arduino(value):
 def send_value():
     try:
         data = request.get_json()
-        value = data['value']
-        send_value_to_arduino(value)
+        #value = data['value']
+        send_value_to_arduino(data)
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
