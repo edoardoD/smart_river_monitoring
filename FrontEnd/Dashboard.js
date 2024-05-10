@@ -91,11 +91,18 @@ document.addEventListener("DOMContentLoaded", function() {
         valveLevel.value = valve;
 
         // Send Valve Opening Level
-        const setValveButton = document.getElementById("set_button");
+        const setValveButton = document.getElementById("manual");
         setValveButton.addEventListener('click', function() {
             valve = valveLevel.value;
             // Send API request to update valve opening level
             sendMessage(valve);
+        });
+
+        // Send Valve Opening Level
+        const automatic = document.getElementById("automatic");
+        setValveButton.addEventListener('click', function() {
+            // Send API request to bring back algorithm control
+            // TODO: creare l'endpoint
         });
 
         // Update Water Level Status
