@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
         setValveButton.addEventListener('click', function() {
             // Send API request to bring back algorithm control
             // TODO: creare l'endpoint
+            fetch('http://127.0.0.1:5000/api/automatic')
         });
 
         // Update Water Level Status

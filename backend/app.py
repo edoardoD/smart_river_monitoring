@@ -13,6 +13,7 @@ messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT (non ancora l
 status = 'UNDEFINED'     # TODO: improve with real status
 valve_opening_level = 0  # TODO: improve with real valve opening level [%]
 frequency = 15000        # TODO: improve, 15 000ms = 15sec solo per i test [sec]
+algorithm = True         # defautl value true, updatable form dashboard
 
 # Configurazione del broker MQTT
 broker = 'broker.emqx.io'
@@ -96,10 +97,14 @@ def send_value():
         data = request.get_json()
         #value = data['value']
         send_value_to_arduino(data)
+        algorithm = False
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
     
+@app.route('/api/automatic', methods=['POST'])
+def automatic():
+    algorithm = True
 
 if __name__ == '__main__':
     asyncio.run(main())
