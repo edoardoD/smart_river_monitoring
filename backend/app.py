@@ -100,13 +100,13 @@ def get_messages():
 def send_value_to_arduino(value):
     try:
         with serial.Serial('COM8', 9600) as ser:
-        # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
-        #ser = serial.Serial('COM8', 9600)
-        # Invia il valore tramite la porta seriale
-        ser.write((json_value + '\n').encode())
-        # Chiudi la porta seriale
-        #ser.close()
-        print(f"Value {value} sent to Arduino successfully")
+            # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
+            #ser = serial.Serial('COM8', 9600)
+            # Invia il valore tramite la porta seriale
+            ser.write((json_value + '\n').encode())
+            # Chiudi la porta seriale
+            #ser.close()
+            print(f"Value {value} sent to Arduino successfully")
     except serial.SerialException as e:
         print(f"Error opening serial port: {e}")
     except Exception as e:
