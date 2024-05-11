@@ -116,9 +116,9 @@ def send_value_to_arduino(value):
 def send_value():
     try:
         data = request.get_json()
-        value = data['value']
-        send_value_to_arduino(value)
-        valve_opening_level = value
+        #value = data['value']
+        send_value_to_arduino(data)
+        algorithm = False
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
