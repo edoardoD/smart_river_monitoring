@@ -49,7 +49,6 @@ int Gateway::getPotentioMeterValue() {
 
 void Gateway::pritnState() {
     String message = "Mode: "+this->enum_toString(this->state) +", Gate degree: " + servoMotor->getPosition();
-    lcd->clear();
     lcd->show(message);
     Serial.println(message);    
 }
