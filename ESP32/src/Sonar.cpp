@@ -10,8 +10,8 @@ Sonar::Sonar(int echoPin,
       trigPin(trigPin),
       temperature(tempAmb),
       timeOut(maxTime){
-    pinMode(trigPin, OUTPUT);
-    pinMode(echoPin, INPUT);
+    pinMode(trigPin, INPUT);
+    pinMode(echoPin, OUTPUT);
 }
 
 double Sonar::getSoundVelocity(){

@@ -40,9 +40,11 @@ def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         try:
+            water_level = float(msg.payload.decode())
+            update_system_state(water_level)
             messages.append({
                 'frequency': frequency,
-                'water_level': msg.payload.decode(),
+                'water_level': water_level,
                 'valve_opening_level': valve_opening_level,
                 'system_status': status
             })
@@ -51,6 +53,29 @@ def subscribe(client: mqtt_client):
 
     client.subscribe(topic)
     client.on_message = on_message
+
+def update_system_state(water_level):
+    #global status, valve_opening_level, frequency
+    WL1, WL2, WL3, WL4 = 5, 10, 15, 20
+    F1, F2 = 15000, 10000
+
+    if water_level >= WL1 and water_level <= WL2:
+        status = 'NORMAL'
+        valve_opening_level = 25
+        frequency = F1
+    elif water_level < WL1:
+        status = 'ALARM-TOO-LOW'
+        valve_opening_level = 0
+    elif water_level > WL2:
+        if water_level <= WL3:
+            status = 'PRE-ALARM-TOO-HIGH'
+            frequency = F2
+        elif water_level <= WL4:
+            status = 'ALARM-TOO-HIGH'
+            valve_opening_level = 50
+        else:
+            status = 'ALARM-TOO-HIGH-CRITIC'
+            valve_opening_level = 100
 
 
 async def main():
@@ -74,16 +99,13 @@ def get_messages():
 # - Assicurati di aggiornare la porta seriale (/dev/ttyUSB0) e il baud rate (9600) secondo la tua configurazione.
 def send_value_to_arduino(value):
     try:
+        with serial.Serial('COM8', 9600) as ser:
         # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
-        ser = serial.Serial('COM6', 9600)
-        # Invia il valore tramite la porta seriale
-        # ser.write(str(value).encode())
-        # Converti il valore in una stringa JSON
-        json_value = json.dumps(value)
+        #ser = serial.Serial('COM8', 9600)
         # Invia il valore tramite la porta seriale
         ser.write((json_value + '\n').encode())
         # Chiudi la porta seriale
-        ser.close()
+        #ser.close()
         print(f"Value {value} sent to Arduino successfully")
     except serial.SerialException as e:
         print(f"Error opening serial port: {e}")
@@ -94,8 +116,9 @@ def send_value_to_arduino(value):
 def send_value():
     try:
         data = request.get_json()
-        #value = data['value']
-        send_value_to_arduino(data)
+        value = data['value']
+        send_value_to_arduino(value)
+        valve_opening_level = value
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400

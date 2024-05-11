@@ -4,8 +4,8 @@
 #define MSG_BUFFER_SIZE  50
 
 /* wifi network info, replace these with yours */
-const char* ssid = "Home&Life SuperWiFi-726E";
-const char* password = "73JR8QPKDBTLNNTQ";
+const char* ssid = "Oliver";
+const char* password = "zxha6909";
 
 /* MQTT server address and topic */
 const char* mqtt_server = "broker.emqx.io";
@@ -13,13 +13,13 @@ const char* topic = "eps32/topic";
 // TODO: creare topic per la frequenza !
 
 /* Sonar */
-#define TRIGGER_PIN  0      //replace with real value
-#define ECHO_PIN 1          //replace with real value
-const long max_time = 1000; //replace with real value
+#define TRIGGER_PIN  D0      //replace with real value
+#define ECHO_PIN D1          //replace with real value
+const long max_time = 5000; //replace with real value
 
 /* Define Led */
-#define GREEN_LED 2
-#define RED_LED 3
+#define GREEN_LED D2
+#define RED_LED D3
 
 #define F1 10000
 
@@ -44,6 +44,8 @@ void setup() {
   digitalWrite(RED_LED, HIGH);
 }
 
+bool send_distance(float val);
+
 void loop() {
   // reconnect to MQTT if connection lost
   mqttManager.reconnect();
@@ -64,10 +66,11 @@ void loop() {
   }
 }
 
-bool send_distance(int val) {
+bool send_distance(float val) {
   /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "#%ld", val);
+    snprintf (msg, MSG_BUFFER_SIZE, "%f", val);
 
+    Serial.println(String("val: ") + val);
     Serial.println(String("Publishing message: ") + msg);
     
     /* publishing the msg */
