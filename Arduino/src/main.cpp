@@ -12,9 +12,9 @@ Gateway gtw = Gateway();
 
 void setup() {
   gtw.init();
-  ModeTask modeTask = ModeTask(&gtw, 100);
+  ModeTask modeTask = ModeTask(&gtw, 20);
   sched.addTask(&modeTask);
-  WorkerTask workerTask = WorkerTask(&gtw, 200);
+  WorkerTask workerTask = WorkerTask(&gtw, 50);
   sched.addTask(&workerTask);
   Serial.begin(9600);
   Serial.println("Start");
