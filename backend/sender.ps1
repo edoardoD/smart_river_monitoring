@@ -42,7 +42,8 @@ for ($i = 1; $i -le 10; $i++) {
 
     # Convert the JSON object to a string
     $jsonString = ConvertTo-Json -InputObject $jsonObject
-
+    # Pause for 1 second
+    Start-Sleep -Seconds 2
     # Write your JSON data to the serial port
     $port.Write($jsonString)
     Write-Output $jsonObject
