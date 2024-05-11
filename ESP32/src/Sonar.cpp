@@ -10,8 +10,8 @@ Sonar::Sonar(int echoPin,
       trigPin(trigPin),
       temperature(tempAmb),
       timeOut(maxTime){
-    pinMode(trigPin, INPUT);
-    pinMode(echoPin, OUTPUT);
+    pinMode(trigPin, OUTPUT);
+    pinMode(echoPin, INPUT);
 }
 
 double Sonar::getSoundVelocity(){
@@ -25,13 +25,9 @@ double Sonar::getDistance(){
     delayMicroseconds(5);
     digitalWrite(trigPin,LOW);
 
-    double signal = (double)pulseIn(echoPin, HIGH, timeOut);
+    double signal = (double)pulseIn(echoPin, HIGH);
 
-    if (signal == 0){
-        return 0;
-    } else {
-        double time = signal / 1000.0 / 1000.0 / 2;
-        double distance = time*getSoundVelocity();
-        return distance;
-    }
+    double time = signal / 1000.0 / 1000.0 / 2;
+    double distance = time*getSoundVelocity();
+    return distance;
 }

@@ -15,7 +15,7 @@ const char* topic = "eps32/topic";
 /* Sonar */
 #define TRIGGER_PIN  D0      //replace with real value
 #define ECHO_PIN D1          //replace with real value
-const long max_time = 5000; //replace with real value
+const long max_time = 20000; //replace with real value
 
 /* Define Led */
 #define GREEN_LED D2
@@ -25,7 +25,7 @@ const long max_time = 5000; //replace with real value
 
 WiFiManager wifiManager(ssid, password);
 MQTTManager mqttManager(mqtt_server, topic);
-Sonar sonar(TRIGGER_PIN, ECHO_PIN, max_time);
+Sonar sonar(ECHO_PIN, TRIGGER_PIN, max_time);
 
 unsigned long lastMsgTime = 0;
 char msg[MSG_BUFFER_SIZE];
