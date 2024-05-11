@@ -75,13 +75,13 @@ def get_messages():
 def send_value_to_arduino(value):
     try:
         # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
-        ser = serial.Serial('COM8', 9600)
+        ser = serial.Serial('COM6', 9600)
         # Invia il valore tramite la porta seriale
         # ser.write(str(value).encode())
         # Converti il valore in una stringa JSON
         json_value = json.dumps(value)
         # Invia il valore tramite la porta seriale
-        ser.write(json_value.encode())
+        ser.write((json_value + '\n').encode())
         # Chiudi la porta seriale
         ser.close()
         print(f"Value {value} sent to Arduino successfully")
