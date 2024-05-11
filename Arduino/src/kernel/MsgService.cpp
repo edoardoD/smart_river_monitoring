@@ -15,6 +15,7 @@ Msg* MsgServiceClass::receiveMsg(){
     msgAvailable = false;
     currentMsg = NULL;
     content = "";
+
     return msg;  
   } else {
     return NULL; 
@@ -32,7 +33,8 @@ void MsgServiceClass::init(){
 void MsgServiceClass::sendMsg(const String& msg){
   Serial.println(msg);  
 }
-
+/**
+ * @brief add Serial.Flush for releasing serial port***/
 void serialEvent() {
   /* reading the content */
   while (Serial.available()) {
@@ -44,6 +46,7 @@ void serialEvent() {
       content += ch;      
     }
   }
+  Serial.flush();
 }
 
 bool MsgServiceClass::isMsgAvailable(Pattern& pattern){
