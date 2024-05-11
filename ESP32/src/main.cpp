@@ -44,7 +44,7 @@ void setup() {
   digitalWrite(RED_LED, HIGH);
 }
 
-bool send_distance(int val);
+bool send_distance(float val);
 
 void loop() {
   // reconnect to MQTT if connection lost
@@ -66,10 +66,11 @@ void loop() {
   }
 }
 
-bool send_distance(int val) {
+bool send_distance(float val) {
   /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "%d", val);
+    snprintf (msg, MSG_BUFFER_SIZE, "%f", val);
 
+    Serial.println(String("val: ") + val);
     Serial.println(String("Publishing message: ") + msg);
     
     /* publishing the msg */
