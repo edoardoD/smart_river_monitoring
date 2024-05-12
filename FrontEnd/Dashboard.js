@@ -3,9 +3,30 @@ document.addEventListener("DOMContentLoaded", function() {
     let dataWater = []; // List of water level values over time
     let valve; // opening level valve
     let system_status;
-    let WL4 = 30; // TODO:set-correct-value. Water Level 4 max-high of the river
-    let frequency = 10000; // Frequency to be received from the server (10000 = 10 sc default)
+    let WL4=4; // TODO:set-correct-value. Water Level 4 max-high of the river
+    let frequency = 5000; // Frequency to be received from the server (10000 = 10 sc default)
     let waterLevelChart; 
+
+    //dashboard element
+    const systemStatus = document.getElementById('status');
+    const valveLevel = document.getElementById('valveLevel');
+    const water = document.getElementById("water");
+    const valueWater = document.getElementById("value");
+
+    // Send Valve Opening Level
+    const setValveButton = document.getElementById("manual");
+    setValveButton.addEventListener('click', function() {
+        valve = valveLevel.value;
+        // Send API request to update valve opening level
+        sendMessage(valve);
+    });
+
+    // Send Valve Opening Level
+    const automatic = document.getElementById("automatic");
+    automatic.addEventListener('click', function() {
+        // Send API request to bring back algorithm control
+        fetch('http://127.0.0.1:5000/api/automatic')
+    });
 
     // Funzione per ottenere i messaggi dal server Flask
     function getMessages() {
@@ -83,32 +104,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Update System Status
-        const systemStatus = document.getElementById('status');
         systemStatus.textContent = system_status;
 
         // Update Valve Opening Level
-        const valveLevel = document.getElementById('valveLevel');
         valveLevel.value = valve;
 
-        // Send Valve Opening Level
-        const setValveButton = document.getElementById("manual");
-        setValveButton.addEventListener('click', function() {
-            valve = valveLevel.value;
-            // Send API request to update valve opening level
-            sendMessage(valve);
-        });
-
-        // Send Valve Opening Level
-        const automatic = document.getElementById("automatic");
-        setValveButton.addEventListener('click', function() {
-            // Send API request to bring back algorithm control
-            // TODO: creare l'endpoint
-            fetch('http://127.0.0.1:5000/api/automatic')
-        });
-
         // Update Water Level Status
-        const water = document.getElementById("water");
-        const valueWater = document.getElementById("value");
         water.style.opacity = 1;
         valueWater.textContent = Math.round((dataWater[dataWater.length-1]/WL4)*100) + "%";
         water.style.height = valueWater.textContent;

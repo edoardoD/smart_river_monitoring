@@ -12,7 +12,8 @@ CORS(app)  # Abilita CORS per tutte le route
 messages = []  # Lista per memorizzare i messaggi ricevuti da MQTT (non ancora letti da js)
 status = 'UNDEFINED'     # TODO: improve with real status
 valve_opening_level = 0  # TODO: improve with real valve opening level [%]
-frequency = 15000        # TODO: improve, 15 000ms = 15sec solo per i test [sec]
+frequency = 5000        # TODO: improve, 5 000 ms = 5sec solo per i test [sec]
+algorithm = True
 
 # Configurazione del broker MQTT
 broker = 'broker.emqx.io'
@@ -41,7 +42,8 @@ def subscribe(client: mqtt_client):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         try:
             water_level = float(msg.payload.decode())
-            update_system_state(water_level)
+            if algorithm:
+                update_system_state(water_level)
             messages.append({
                 'frequency': frequency,
                 'water_level': water_level,
@@ -55,8 +57,8 @@ def subscribe(client: mqtt_client):
     client.on_message = on_message
 
 def update_system_state(water_level):
-    #global status, valve_opening_level, frequency
-    WL1, WL2, WL3, WL4 = 5, 10, 15, 20
+    global status, valve_opening_level, frequency
+    WL1, WL2, WL3, WL4 = 1,2,3,4
     F1, F2 = 15000, 10000
 
     if water_level >= WL1 and water_level <= WL2:
@@ -100,10 +102,9 @@ def get_messages():
 def send_value_to_arduino(value):
     try:
         with serial.Serial('COM8', 9600) as ser:
-            # Apre la porta seriale verso Arduino (verifica la porta seriale corretta)
-            #ser = serial.Serial('COM8', 9600)
             # Invia il valore tramite la porta seriale
-            ser.write((json_value + '\n').encode())
+            json_value = json.dumps(value)
+            ser.write(json_value.encode())
             # Chiudi la porta seriale
             #ser.close()
             print(f"Value {value} sent to Arduino successfully")
@@ -114,15 +115,23 @@ def send_value_to_arduino(value):
 
 @app.route('/api/send_value', methods=['POST'])
 def send_value():
+    global algorithm
     try:
         data = request.get_json()
         #value = data['value']
         send_value_to_arduino(data)
-        algorithm = False
+        if algorithm == True:
+            algorithm = False
         return jsonify({"message": "Value sent successfully to Arduino"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
     
+@app.route('/api/automatic', methods=['GET'])
+def automatic():
+    global algorithm
+    if algorithm == False:
+        algorithm = True
+    return jsonify({"message": "Automatic endpoint accessed"})
 
 if __name__ == '__main__':
     asyncio.run(main())
