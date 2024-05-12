@@ -38,6 +38,7 @@ def connect_mqtt() -> mqtt_client:
 
 # sottoscrive il client creato al topic esp32
 def subscribe(client: mqtt_client):
+    global algorithm
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         try:
@@ -101,7 +102,7 @@ def get_messages():
 # - Assicurati di aggiornare la porta seriale (/dev/ttyUSB0) e il baud rate (9600) secondo la tua configurazione.
 def send_value_to_arduino(value):
     try:
-        with serial.Serial('COM8', 9600) as ser:
+        with serial.Serial('COM10', 9600) as ser:
             # Invia il valore tramite la porta seriale
             json_value = json.dumps(value)
             ser.write(json_value.encode())
@@ -115,10 +116,11 @@ def send_value_to_arduino(value):
 
 @app.route('/api/send_value', methods=['POST'])
 def send_value():
-    global algorithm
+    global algorithm, valve_opening_level
     try:
         data = request.get_json()
         #value = data['value']
+        valve_opening_level = data['value']
         send_value_to_arduino(data)
         if algorithm == True:
             algorithm = False
