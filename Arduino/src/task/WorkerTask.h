@@ -12,7 +12,7 @@ class WorkerTask : public Task
 
 private:
   Gateway *gtw;
-  StaticJsonDocument<128> doc;
+  JsonDocument doc;
 public:
   WorkerTask(Gateway* gateway, int period);
   void tick();
