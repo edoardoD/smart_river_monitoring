@@ -59,6 +59,8 @@ public:
      * @brief print the current state system on I2C LCD
      ***/
     void pritnState();
+
+    void printMessage(String st1);
 };
 
 #endif // GATEWAY_H
