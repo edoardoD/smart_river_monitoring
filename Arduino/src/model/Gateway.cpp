@@ -9,9 +9,9 @@ void Gateway::init()
     button = new ButtonImpl(BUTTON_PIN);
     servoMotor = new ServoMotorImpl(GATE_PIN);
     pot = new Potentiometer(POT_PIN);
-    servoMotor->on();
     lcd = new Lcd(0x27, 16, 2);
-    Serial.println("Gateway init");
+    servoMotor->on();
+    servoMotor->setPosition(0);
 }
 
 String Gateway::enum_toString(SysTatus status)
