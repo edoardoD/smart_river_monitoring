@@ -4,6 +4,7 @@
 WorkerTask::WorkerTask(Gateway *gateway, int period) : Task(period)
 {
     gtw = gateway;
+    MsgService.init();
 }
 
 void WorkerTask::tick()
@@ -17,13 +18,11 @@ void WorkerTask::tick()
             Msg *msg = MsgService.receiveMsg();
             deserializeJson(doc, msg->getContent());
             int valveValue = doc[String("value")];
-            Serial.println(valveValue);
             gtw->setGateDegree(valveValue);
         }
         gtw->pritnState();
         break;
     case SysTatus::MANUAL:
-        
         gtw->setGateDegree(gtw->getPotentioMeterValue());
         gtw->pritnState();
         break;
