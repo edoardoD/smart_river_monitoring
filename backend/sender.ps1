@@ -26,7 +26,7 @@ Add-Type -TypeDefinition @"
 "@
 
 # Create a new SerialPortManager instance
-$port = New-Object SerialPortManager -ArgumentList "COM6", 9600, "None", 8, "One"
+$port = New-Object SerialPortManager -ArgumentList "COM6", 115200, "None", 8, "One"
 $jsonObject = @{
     "value"=90
 }
@@ -35,7 +35,7 @@ for ($i = 1; $i -le 10; $i++) {
     # Change the value of the JSON object
     $jsonObject.value = $i
     # Generate a random number between 0 and 180
-    $randomNumber = Get-Random -Minimum 0 -Maximum 181
+    $randomNumber = Get-Random -Minimum 0 -Maximum 100
 
     # Change the value of the JSON object to the random number
     $jsonObject.value = $randomNumber
@@ -43,10 +43,10 @@ for ($i = 1; $i -le 10; $i++) {
     # Convert the JSON object to a string
     $jsonString = ConvertTo-Json -InputObject $jsonObject
     # Pause for 1 second
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 4
     # Write your JSON data to the serial port
     $port.Write($jsonString)
-    Write-Output $jsonObject
+    Write-Output $jsonString
 }
 
 # Dispose the SerialPortManager instance
