@@ -12,6 +12,7 @@ class Gateway
 {
 private:
     bool automode;
+    String lastMessage="";
     Lcd *lcd;
     ServoMotorImpl *servoMotor;
     ButtonImpl *button;

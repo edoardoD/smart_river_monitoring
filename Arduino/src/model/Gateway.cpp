@@ -48,10 +48,18 @@ int Gateway::getPotentioMeterValue() {
 }
 
 void Gateway::pritnState() {
-    String message = "Mode: "+this->enum_toString(this->state) +", Gate degree: " + servoMotor->getPosition();
-    lcd->show(message);
+
+    int servoPosition = servoMotor->getPosition();
+    int mappedPosition = map(servoPosition, 0, 180, 0, 100);
+    String message = "Mode: " + this->enum_toString(this->state) + ", Gate percentage: " + String(mappedPosition);
+    if (message != lastMessage) {
+        lcd->clear();
+        lcd->show(message);
+        lastMessage = message;
+    }
 }
 
 void Gateway::printMessage(String st1) {
+    lcd->clear();
     lcd->show(st1);
 }
