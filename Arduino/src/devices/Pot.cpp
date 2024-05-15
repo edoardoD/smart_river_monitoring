@@ -10,9 +10,15 @@ void Potentiometer::sync(){
   updateSyncTime(millis());
 }
 
+/***
+ * @brief get value of potentiometer and mapping it to 0-180 degree
+ * with a step of 5 degree
+ * @return value of potentiometer
+ 
+*/
 float Potentiometer::getValue(){
-  
-  value = map(value, 0, 1023, 0, 180);
+
+  value = map(value, 0, 1023, 0, 90) * 2;
   return value;
 }
 
