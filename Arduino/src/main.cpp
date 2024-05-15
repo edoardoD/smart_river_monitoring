@@ -1,4 +1,4 @@
-  #include <Arduino.h>
+#include <Arduino.h>
 #include "kernel/Scheduler.h"
 #include "Kernel/Task.h"
 #include "model/Gateway.h"
@@ -7,7 +7,7 @@
   
   
 #define DEBUG 
-Scheduler sched = Scheduler(100);
+Scheduler sched = Scheduler(50);
 Gateway gtw = Gateway();  
 
 void setup() {
