@@ -33,6 +33,14 @@ bool Gateway::buttonRead(){
 
 void Gateway::changeMode() {
     state= (state == SysTatus::AUTO) ? SysTatus::MANUAL : SysTatus::AUTO;
+    
+    JsonDocument json;
+    String jsonString;
+    json["mode"] = enum_toString(state);
+
+    // Serialize the JSON object to a string
+    serializeJson(json, jsonString);
+    MsgService.sendMsg(jsonString);
 }
 
 void Gateway::setGateDegree(int degree) {

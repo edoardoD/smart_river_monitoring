@@ -7,6 +7,8 @@
 #include "devices/ServoMotorImpl.h"
 #include "devices/Lcd.h"
 #include "devices/Pot.h"
+#include "kernel/MsgService.h"
+#include <ArduinoJson.h>
 
 class Gateway
 {
