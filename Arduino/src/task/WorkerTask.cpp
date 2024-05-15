@@ -32,8 +32,6 @@ void WorkerTask::tick()
             else
             {
                 gtw->printMessage(err.c_str());
-                // Handle deserialization error here
-                //gtw->printMessage(err.c_str());
             }
             //delete the msg
             delete msg;
