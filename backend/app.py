@@ -102,13 +102,16 @@ def get_messages():
 # - Assicurati di aggiornare la porta seriale (/dev/ttyUSB0) e il baud rate (9600) secondo la tua configurazione.
 def send_value_to_arduino(value):
     try:
-        with serial.Serial('COM10', 9600) as ser:
-            # Invia il valore tramite la porta seriale
-            json_value = json.dumps(value)
-            ser.write(json_value.encode())
-            # Chiudi la porta seriale
-            #ser.close()
-            print(f"Value {value} sent to Arduino successfully")
+        with serial.Serial('COM6', 115200, dsrdtr=True, rtscts = True) as ser:
+
+            #Invia il valore tramite la porta seriale
+            value_json = {"value" : int(value)}
+            json_msg = json.dumps(value_json)
+            ser.write((json_msg + '\n').encode())
+            # ser.write(json_msg.encode())
+            #Chiudi la porta seriale
+            ser.close()
+            print(f"Value {json_msg} sent to Arduino successfully")
     except serial.SerialException as e:
         print(f"Error opening serial port: {e}")
     except Exception as e:
@@ -119,9 +122,9 @@ def send_value():
     global algorithm, valve_opening_level
     try:
         data = request.get_json()
-        #value = data['value']
+        value = data['value']
         valve_opening_level = data['value']
-        send_value_to_arduino(data)
+        send_value_to_arduino(value)
         if algorithm == True:
             algorithm = False
         return jsonify({"message": "Value sent successfully to Arduino"})
