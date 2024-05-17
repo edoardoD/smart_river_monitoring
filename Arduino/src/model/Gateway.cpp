@@ -36,8 +36,9 @@ void Gateway::changeMode() {
     
     JsonDocument json;
     String jsonString;
-    json["mode"] = enum_toString(state);
-
+    int percentage = map(servoMotor->getPosition(),180,0,100,0);
+    json["valve"] = percentage;
+    
     // Serialize the JSON object to a string
     serializeJson(json, jsonString);
     MsgService.sendMsg(jsonString);

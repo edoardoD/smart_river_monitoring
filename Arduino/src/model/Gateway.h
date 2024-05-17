@@ -39,6 +39,8 @@ public:
     bool buttonRead();
     /***
      * @brief change mode from auto to manual and vice versa
+     * and send opening percentage while passing from manual 
+     * to auto
      */
     void changeMode();
     /**
