@@ -70,7 +70,7 @@ bool send_distance(float val) {
   /* creating a msg in the buffer */
     snprintf (msg, MSG_BUFFER_SIZE, "%f", val);
 
-    Serial.println(String("val: ") + val);
+    Serial.println(String("val: ") + val*100);
     Serial.println(String("Publishing message: ") + msg);
     
     /* publishing the msg */
