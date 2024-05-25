@@ -79,6 +79,8 @@ def update_system_state(water_level):
         else:
             status = 'ALARM-TOO-HIGH-CRITIC'
             valve_opening_level = 100
+    send_value_to_arduino(valve_opening_level)
+    
 
 
 async def main():

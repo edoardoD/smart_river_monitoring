@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+
+\title{Report Terzo progetto \\ Sistemi Embedded e Internet-Of-Things}
+
+\author{Alessandro Martini, Michele Olivieri, Edoardo Desiderio}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Descrizione del sistema "\textit{Smart River Monitoring}"}
+
+\includegraphics[scale=0.7]{sistema_iot.png}
+
+\section*{Water Level Monitoring subsystem}
+Per l'invio dei dati del sonar, siamo andati ad utilizzare il dispositivo ESP32 (programmato in c++) che, tramite l'utilizzo del protocollo mqtt, permette di mettere in comunicazione il backend Flask con la nostra parte di ESP32 + Sonar che, tramite l'invio di ultrasuoni per calcolare l'altezza dell'acqua, permette di inviare valori in tempo reale al nostro server, che a sua volta li manderà alla nostra parte FrontEnd.
+
+\section*{River Monitoring Service subsystem}
+Abbiamo implementato il nostro backend tramite un micro-framework chiamato Flask, basato sul linguaggio di programmazione Python. La scelta dell'utilizzo del framework Flask per la realizzazione del backend è stata dettata dalla sua facilità di implementazione lato code, inoltre flask permette, tramite la definizione di "rotte", di avere una facile gestione dei servizi e delle chiamate provenienti dalla nostra dashboard. \\ Un'altra peculiarità di Flask è la semplicità con cui si può creare e mantenere una sessione di connessione (la gestione dei publisher e subscriber) tramite protocollo mqtt, questo è reso possibile grazie alla presenza di librerie specifiche per la gestione del protocollo di comunicazione mqtt.
+
+\section*{Water Channel Controller subsystem}
+Per controllare l'apertura e la chiusura del gate e la visualizzazione a monitor-lcd del livello di apertura del gate siamo andati ad utilizzare arduino (programmato in c++).  \\
+Siamo andati ad utilizzare il pattern di programmazione "Observer Pattern", poichè è un design pattern comportamentale utilizzato in programmazione per definire una relazione uno-a-molti tra oggetti. Questo permette a un oggetto, chiamato "soggetto" (subject), di notificare automaticamente un insieme di altri oggetti, chiamati "osservatori" (observers), quando il suo stato cambia. È utile quando un cambiamento nello stato di un oggetto richiede che altri oggetti vengano aggiornati immediatamente e automaticamente.\\  Per la scelta dei tempi di scheduling, il metodo teorico sarebbe quello di calcolare il tempo di esecuzione di ogni task e valutare il MCD per prevenire la perdita di eventi; in fase di implementazione siamo andati ad impostare dei cambiamenti nei vari tempi di scheduling in maniera empirica, per prevenire la perdita di eventi.
+
+\section*{River Monitoring Dashboard subsystem}
+Per l'implementazione della parte front-end del nostro progetto, abbiamo utilizzato i linguaggi HTML5, CSS3 e JavaScript, già visti ed utilizzati in precedenza nel nostro percorso di studi nel corso di "Tecnologie Web". \\ Per eseguire le chiamate al nostro backend in Flask, siamo andati a sviluppare delle chiamate json in modo da andar a definire, in maniera semplice, pulita ed efficace, delle fetch a rotte specifiche, implementate all'interno del nostro server Flask.
+
+
+\end{document}
