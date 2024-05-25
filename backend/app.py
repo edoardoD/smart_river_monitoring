@@ -43,7 +43,7 @@ def subscribe(client: mqtt_client):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         try:
             water_level = float(msg.payload.decode())
-            if algorithm:
+            if algorithm==True:
                 update_system_state(water_level)
             messages.append({
                 'frequency': frequency,
@@ -59,7 +59,7 @@ def subscribe(client: mqtt_client):
 
 def update_system_state(water_level):
     global status, valve_opening_level, frequency
-    WL1, WL2, WL3, WL4 = 1,2,3,4
+    WL1, WL2, WL3, WL4 = 0.1, 0.2, 0.3, 0.4
     F1, F2 = 15000, 10000
 
     if water_level >= WL1 and water_level <= WL2:
